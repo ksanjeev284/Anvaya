@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Search } from 'lucide-react';
 import SearchBar from './components/SearchBar';
 import KeywordMetrics from './components/KeywordMetrics';
@@ -45,6 +45,17 @@ function App() {
     setShowResults(true);
   };
 
+  const handleTestDatabase = async (keyword: string) => {
+    try {
+      const response = await fetch(`/api/test-keyword?keyword=${keyword}`);
+      const result = await response.json();
+      console.log('Database test result:', result);
+      // You can display the result to the user as needed
+    } catch (error) {
+      console.error('Error testing database:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
@@ -69,7 +80,7 @@ function App() {
         </div>
 
         <div className="flex justify-center mb-12">
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar onSearch={handleSearch} onTestDatabase={handleTestDatabase} />
         </div>
 
         {showResults && (
