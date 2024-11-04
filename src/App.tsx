@@ -39,6 +39,7 @@ const mockTrendData = [
 function App() {
   const [searchedKeyword, setSearchedKeyword] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [testResult, setTestResult] = useState('');
 
   const handleSearch = (keyword: string) => {
     setSearchedKeyword(keyword);
@@ -47,12 +48,21 @@ function App() {
 
   const handleTestDatabase = async (keyword: string) => {
     try {
-      const response = await fetch(`/api/test-keyword?keyword=${keyword}`);
+      const response = await fetch(`/test-keyword?keyword=${keyword}`, {
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
       const result = await response.json();
       console.log('Database test result:', result);
-      // You can display the result to the user as needed
+      setTestResult(result.message);
     } catch (error) {
       console.error('Error testing database:', error);
+      setTestResult('Error testing database.');
     }
   };
 
@@ -89,6 +99,8 @@ function App() {
             <TrendChart data={mockTrendData} />
           </div>
         )}
+
+        {testResult && <div>{testResult}</div>}
       </main>
 
       <footer className="bg-white border-t mt-16">
